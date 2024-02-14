@@ -16,6 +16,7 @@ pipeline{
     REPO_URL = "973903430757.dkr.ecr.ap-south-1.amazonaws.com/aamiz-repo"
     REPO_LOGIN = "973903430757.dkr.ecr.ap-south-1.amazonaws.com"
     DEPLOYMENT_NAME = "node_app"
+    REGION = "ap-south-1"
     }
 
 
@@ -49,27 +50,13 @@ pipeline{
             }
         }
 
-        // stage("Push Image") {
-        // steps {
-        //     script {
-        //     try {
-        //         timeout(time: 60, unit: 'SECONDS') {
-        //         isBuild = input message: "Do you want to push latest build? If you gave 'No' to build, please give 'No' here as well",
-        //                     parameters: [[$class: 'ChoiceParameterDefinition', name: 'Do you want to Push the new image?', choices: ['Yes', 'No'], description: 'Select yes if you would like to make new build']]
-        //         }
-        //     }
-        //     catch (err) {
-        //         echo "${err}"
-        //         echo "isBuild passed as Yes"
-        //         isBuild = "Yes"
-        //     }
-        //     //This block tags the built image and pushes it to the ECR_REPO
-        //         sh "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin \"${env.REPO_LOGIN}\""
-        //         sh "docker tag ${env.ImageName}:${env.TagId} \"${env.REPO_URL}\":${env.TagId}"
-        //         sh "docker push \"${env.REPO_URL}\":${env.TagId}"    
-        //     }
-        // }
-        // }
+        stage("Push Image") {
+        steps {
+            echo "Login into ECR Repo..."
+            pushImage("${env.REGION}", "${env.REPO_LOGIN}", "${env.REPO_URL}", "${env.BUILD_IMAGE_NAME}")
+            echo "Pushed the image to ECR"
+        }
+        }
         // stage("Deploy Latest Build") {
         // steps {
         //     script {
