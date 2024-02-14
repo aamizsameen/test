@@ -1,8 +1,10 @@
 #!/bin/bash
 
-# Check if COUNT variable is set, if not, initialize it to 1.0
-: ${COUNT:=1.0}
+COUNT_FILE="../vars/tagId.txt"
 
-COUNT=$(echo "$COUNT + 0.1" | bc)
-echo $COUNT
-export COUNT
+COUNT=$(cat "$COUNT_FILE" || echo "1.0")
+NEW_COUNT=$(echo "$COUNT + 0.1" | bc)
+echo "$NEW_COUNT"
+
+echo "$NEW_COUNT" > "$COUNT_FILE"
+

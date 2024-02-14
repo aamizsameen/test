@@ -1,16 +1,12 @@
-//Latest image is build from the latest clone from pullGitRepo.groovy
-def call(BUILD_IMAGE_NAME) {
 
-  sh TAG_ID = ". ../imageTagId.sh"
-  sh "docker build -t ${env.BUILD_IMAGE_NAME}:latest ."
+def call(BUILD_IMAGE_NAME) {
+    script {
+        // Use the source command to run count_script.sh in the same shell
+        TAG_ID = sh(script: '. ../imageTagId.sh', returnStdout: true).trim()
+
+        // Use the new count in the docker build command
+        sh "docker build -t ${env.BUILD_IMAGE_NAME}:${TAG_ID} ."
+    }
 }
 
-
-// //Latest image is build from the latest clone from pullGitRepo.groovy
-// def call(BUILD_IMAGE_NAME) {
-//   script {
-//     sh ". ../imageTagId.sh"
-//     sh "docker build -t ${env.BUILD_IMAGE_NAME}:$TAG_ID ."
-//   }
-// }
 

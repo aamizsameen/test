@@ -13,21 +13,28 @@ pipeline{
     APP_GIT_BRANCH = "main"
     APP_CREDENTIALS_ID = "git"
     BUILD_IMAGE_NAME = "axcess-fe-v1"
-    REPO_URL = "973903430757.dkr.ecr.ap-south-1.amazonaws.com/aamiz-repo"
-    REPO_LOGIN = "973903430757.dkr.ecr.ap-south-1.amazonaws.com"
+    REPO_URL = "058264316945.dkr.ecr.ap-south-1.amazonaws.com/test"
+    REPO_LOGIN = "058264316945.dkr.ecr.ap-south-1.amazonaws.com"
     DEPLOYMENT_NAME = "node_app"
     REGION = "ap-south-1"
+    NAMESPACE = "default"
+    CONTAINER_NAME = "main"
     }
 
 
     stages {
 
-        stage('CICD Repo') {
+        stage('Clone CICD Repo') {
             steps {
                 echo "Cloning CICD Repo..."
                 pullGitRepo("${env.APP_GIT_BRANCH}", "${env.APP_CREDENTIALS_ID}", "${env.APP_GIT_REPO}")
                 echo "CICD Repo Cloned."
 
+            }
+        }
+
+        stage('Clone Application Repo') {
+            steps {
                 dir('..') {
 
                     echo "Cloning App Repo..."
@@ -36,12 +43,6 @@ pipeline{
                 }
             }
         }
-
-        // stage('Application Repo') {
-        //     steps {
-         
-        //     }
-        // }
 
         stage("Build Image") {
             steps {
@@ -55,78 +56,42 @@ pipeline{
             echo "Login into ECR Repo..."
             pushImage("${env.REGION}", "${env.REPO_LOGIN}", "${env.REPO_URL}", "${env.BUILD_IMAGE_NAME}")
             echo "Pushed the image to ECR"
+            }
         }
+
+        stage("Deploy Latest Build") {
+        steps {
+            echo "Deploying the latest build..."
+            deployImage("${env.DEPLOYMENT_NAME}", "${env.REPO_URL}", "${env.NAMESPACE}", "${env.CONTAINER_NAME}")
+            echo "Deployment is done"
+            }
         }
-        // stage("Deploy Latest Build") {
-        // steps {
-        //     script {
-        //     try {
-        //         timeout(time: 60, unit: 'SECONDS') {
-        //         isDeploy = input message: 'DeployLatestBuild',
-        //                     parameters: [[$class: 'ChoiceParameterDefinition', name: 'Would you like to deploy the latest build right away?', choices: ['Yes', 'No'], description: 'Select yes if you would like to deploy the latest build']]
-        //         }
-        //     }
-        //     catch(err) {
-        //         echo "${err}"
-        //         echo "isDeploy passed as Yes"
-        //         isDeploy = "Yes"
-        //     }
-        //     if (isDeploy == "Yes") {
 
-        //         sh "kubectl apply -f deploy.yaml"
-        //         sh "kubectl set image deployment/\"${env.DEPLOYMENT_NAME}\" \"${env.REPO_URL}\":${env.TagId}"
-
-        //     }
-        //     }
-        // }
-        // }
-        // stage("Deploy Different Build") {
-        // steps {
-        //     script {
-        //     try {
-        //         timeout(time: 60, unit: 'SECONDS') {
-        //         isUseOldTaskDefinition = input message: 'Do you want to deploy a different task definition?',
-        //                     parameters: [[$class: 'ChoiceParameterDefinition', name: 'Do you want to deploy a different task definition?', choices: ['Yes', 'No'], description: 'Select yes if you would like to deploy a different task definition?']]
-        //         }
-        //     }
-        //     catch(err) {
-        //         echo "${err}"
-        //         echo "isUseOldTaskDefinition passed as No"
-        //         isUseOldTaskDefinition = "No"
-        //     }
-        //     if (isUseOldTaskDefinition == "Yes") {
-        //         try {
-        //         timeout(time: 60, unit: 'SECONDS') {
-        //             taskNumber = input message: 'Provide the task revision number',
-        //                         parameters: [string(name: 'TaskDefinition Number', description: "Please enter the build number")]
-        //             oldTaskDefinition = "${env.FAMILY}:${taskNumber}"
-        //             echo "$oldTaskDefinition"
-        //         }
-        //         }
-        //         catch(err) {
-        //         echo "${err}"
-        //         echo "TaskNumber cannot be empty and there is no default task number set, requires an user input"
-        //         }
-        //         try {
-        //         timeout(time: 60, unit: 'SECONDS') {
-        //             desiredCount = input message: "DesiredNumberOfConcurrentServices",
-        //                     parameters: [[$class: 'ChoiceParameterDefinition', choices: ["1", "2", "3", "4"],
-        //                             description: 'Please provide the desired number of services you would like to run',
-        //                             name: 'DesiredCount'
-        //                             ]]
-        //         }
-        //         deployImage("${env.CLUSTER}","${env.SERVICE}", "${env.REGION}", "$oldTaskDefinition", "$desiredCount")
-        //         }
-        //         catch(err) {
-        //         echo "${err}"
-        //         echo "No. of services passed as 1"
-        //         desiredCount = "1"
-        //         deployImage("${env.CLUSTER}","${env.SERVICE}", "${env.REGION}", "$oldTaskDefinition", "$desiredCount")
-        //         }  
-        //     }
-        //     }
-        // }
-        // }
+        stage('Cleanup') {
+            steps {
+                sh "docker rmi -f ${env.ImageName}:${env.TagId}"
+            }
+        }
+        stage('Error') {
+            // when doError is equal to 1, return an error
+            when {
+                expression { doError == '1' }
+            }
+            steps {
+                echo "Failure :("
+                error "Test failed on purpose, doError == str(1)"
+            }
+        }
+        stage('Success') {
+            // when doError is equal to 0, just print a simple message
+            when {
+                expression { doError == '0' }
+            }
+            steps {
+                echo "Success :)"
+            }
+        }
+    
     }
 }
 
