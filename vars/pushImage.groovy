@@ -19,7 +19,7 @@ def call(REGION, REPO_LOGIN, REPO_URL, BUILD_IMAGE_NAME) {
 	//println "Tag ID Variable: $tagId"
 
 	//sh "TAG_ID=$(cat ../vars/tagId.txt)"
-	sh "TAG_ID=\\$(cat ../vars/tagId.txt)"
+	sh 'TAG_ID=\\$(cat ../vars/tagId.txt)'
 
 	//TAG_ID = new File(../vars/tagId.txt).text.trim()
         sh "aws ecr get-login-password --region ${env.REGION} | docker login --username AWS --password-stdin ${env.REPO_LOGIN}"
