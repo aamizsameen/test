@@ -67,11 +67,13 @@ pipeline{
             }
         }
 
-        // stage('Cleanup') {
-        //     steps {
-        //         sh "docker rmi -f ${env.BUILD_IMAGE_NAME}:latest"
-        //     }
-        // }
+        stage('Cleanup') {
+            steps {
+                echo "Cleaning up the images..."
+                imageCleanup("${env.BUILD_IMAGE_NAME}")
+                echo "Image cleanup completed"
+            }
+        }
         stage('Error') {
             // when doError is equal to 1, return an error
             when {
