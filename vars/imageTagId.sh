@@ -8,4 +8,3 @@ echo "$NEW_COUNT"
 
 echo "$NEW_COUNT" > "$COUNT_FILE"
 
-export $NEW_COUNT
