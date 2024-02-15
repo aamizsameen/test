@@ -9,7 +9,7 @@ def call(REGION, REPO_LOGIN, REPO_URL, BUILD_IMAGE_NAME) {
 	//sh TAG_ID="cat ../vars/tagId.txt"
 
 
-	def countFile = 'tagId.txt'
+	def countFile = '../vars/tagId.txt'
 
 	// Read the contents of the file into a variable
 	def TAG_ID = new File(countFile).text.trim()
