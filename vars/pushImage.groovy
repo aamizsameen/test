@@ -3,26 +3,6 @@ def call(REGION, REPO_LOGIN, REPO_URL, BUILD_IMAGE_NAME) {
 	script {
 	
 	//def FILE = '../vars/tagId.txt'
-
-	//def TAG_ID = new File(FILE).text.trim()
-
-	//sh TAG_ID="cat ../vars/tagId.txt"
-
-
-	//def countFile = '../vars/tagId.txt'
-
-	// Read the contents of the file into a variable
-	//def TAG_ID = new File(countFile).text.trim()
-
-	// Print the tag ID variable
-	
-	//println "Tag ID Variable: $tagId"
-
-	//sh "TAG_ID=$(cat ../vars/tagId.txt)"
-	//sh TAG_ID='cat ../vars/tagId.txt'
-	//sh "echo $NEW_COUNT"
-	//TAG_ID = new File(../vars/tagId.txt).text.trim()
-	//variableToGet = sh(returnStdout: true, script: """. ${DIRECTORY}/bash_file.sh echo \$VARIABLE""").trim()
 		TAG_ID=sh(returnStdout: true, script: """cat ../vars/tagId.txt""").trim()
         	sh "aws ecr get-login-password --region ${env.REGION} | docker login --username AWS --password-stdin ${env.REPO_LOGIN}"
         	sh "docker tag ${env.BUILD_IMAGE_NAME}:${TAG_ID} ${env.REPO_URL}:${TAG_ID}"

@@ -8,4 +8,3 @@ echo "$NEW_COUNT"
 
 echo "$NEW_COUNT" > "$COUNT_FILE"
 
-export TAG_ID=$NEW_COUNT
