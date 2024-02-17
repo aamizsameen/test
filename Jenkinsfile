@@ -23,22 +23,22 @@ pipeline{
 
     stages {
 
-        stage('Clone CICD Repo') {
+        stage('Clone Application Repo') {
             steps {
-                echo "Cloning CICD Repo..."
+                echo "Cloning App Repo..."
                 pullGitRepo("${env.APP_GIT_BRANCH}", "${env.APP_CREDENTIALS_ID}", "${env.APP_GIT_REPO}")
-                echo "CICD Repo Cloned."
+                echo "App Repo Cloned."
 
             }
         }
 
-        stage('Clone Application Repo') {
+        stage('Clone CICD Repo') {
             steps {
                 dir('..') {
 
-                    echo "Cloning App Repo..."
+                    echo "Cloning CICD Repo..."
                     pullGitRepo("${env.CICD_GIT_BRANCH}", "${env.CICD_CREDENTIALS_ID}", "${env.CICD_GIT_REPO}")
-                    echo "App Repo Cloned."   
+                    echo "CICD Repo Cloned."   
                 }
             }
         }
