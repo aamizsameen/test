@@ -1,7 +1,4 @@
 //@Library("deployScript@main") _
-//Hello!!!
-//Hello again!!, wassup bro
-
 
 pipeline{
     agent any 
