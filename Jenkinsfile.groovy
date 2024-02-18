@@ -1,5 +1,5 @@
-//@Library("deployScript@main") _
-sh "pwd"
+@Library("deployScript@main") _
+
 pipeline{
     agent any 
 
