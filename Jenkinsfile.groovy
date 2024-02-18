@@ -1,4 +1,4 @@
-//@Library("deployScript") _
+@Library("deployScript") _
 
 pipeline{
     agent any 
