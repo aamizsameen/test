@@ -8,16 +8,16 @@ pipeline{
     CICD_GIT_REPO = "https://github.com/aamizsameen/test.git"
     CICD_GIT_BRANCH = "main"
     CICD_CREDENTIALS_ID = "git"
-    APP_GIT_REPO = "https://github.com/aamizsameen/AWS.git"
+    APP_GIT_REPO = "git@uno.brokenenigma.com:raghavendram/unocoin-frontend-upgraded.git"
     APP_GIT_BRANCH = "main"
-    APP_CREDENTIALS_ID = "git"
-    BUILD_IMAGE_NAME = "nginx"
-    REPO_URL = "058264316945.dkr.ecr.ap-south-1.amazonaws.com/test"
+    APP_CREDENTIALS_ID = "ae59053b-c2aa-456b-98b1-52794e33dcd5"
+    BUILD_IMAGE_NAME = "frontend-main-app"
+    REPO_URL = "058264316945.dkr.ecr.ap-south-1.amazonaws.com/frontend-main-app"
     REPO_LOGIN = "058264316945.dkr.ecr.ap-south-1.amazonaws.com"
-    DEPLOYMENT_NAME = "nginx"
+    DEPLOYMENT_NAME = "fe-main"
     REGION = "ap-south-1"
-    NAMESPACE = "default"
-    CONTAINER_NAME = "nginx"
+    NAMESPACE = "frontend"
+    CONTAINER_NAME = "frontend-main-app"
     }
 
 
