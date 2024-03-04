@@ -5,9 +5,9 @@ pipeline{
 
     environment {
     doError = '0'
-    CICD_GIT_REPO = "https://github.com/aamizsameen/test.git"
+    CICD_GIT_REPO = "git@uno.brokenenigma.com:raghavendram/cicd-pipeline.git"
     CICD_GIT_BRANCH = "main"
-    CICD_CREDENTIALS_ID = "git"
+    CICD_CREDENTIALS_ID = "ae59053b-c2aa-456b-98b1-52794e33dcd5"
     APP_GIT_REPO = "git@uno.brokenenigma.com:raghavendram/unocoin-frontend-upgraded.git"
     APP_GIT_BRANCH = "main"
     APP_CREDENTIALS_ID = "ae59053b-c2aa-456b-98b1-52794e33dcd5"
@@ -19,7 +19,6 @@ pipeline{
     NAMESPACE = "frontend"
     CONTAINER_NAME = "frontend-landing-app"
     }
-
 
     stages {
 
@@ -96,3 +95,4 @@ pipeline{
     
     }
 }
+
