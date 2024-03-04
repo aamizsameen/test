@@ -73,26 +73,23 @@ pipeline{
                 echo "Image cleanup completed"
             }
         }
-        stage('Error') {
-            // when doError is equal to 1, return an error
-            when {
-                expression { doError == '1' }
-            }
-            steps {
-                echo "Failure :("
-                error "Test failed on purpose, doError == str(1)"
-            }
+
+    }
+
+    post {
+
+        failure{
+            echo "Notifying in slack."
+            slackFailureNotification()
+            echo "Notified the failure status in slack."  
         }
-        stage('Success') {
-            // when doError is equal to 0, just print a simple message
-            when {
-                expression { doError == '0' }
-            }
-            steps {
-                echo "Success :)"
-            }
+
+        success{
+            echo "Notifying in slack."
+            slackSuccessNotification()
+            echo "Notified the success status in slack."
         }
-    
+        
     }
 }
 
