@@ -1,4 +1,3 @@
-
 def call(BUILD_IMAGE_NAME) {
     script {
         // Use the source command to run count_script.sh in the same shell
