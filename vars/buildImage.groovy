@@ -1,11 +1,9 @@
-def call(BUILD_IMAGE_NAME) {
+def call(BUILD_IMAGE_NAME, DEPLOYMENT_NAME, NAMESPACE) {
     script {
-        // Use the source command to run count_script.sh in the same shell
-        TAG_ID = sh(script: '. ../vars/imageTagId.sh', returnStdout: true).trim()
+        TAG_ID = sh(script: """
+            kubectl get deployment \${DEPLOYMENT_NAME} -n \${NAMESPACE} -o=jsonpath='{.spec.template.spec.containers[0].image}' | awk -F':' '{printf "%.1f", \$2 + 0.1}'
+        """, returnStdout: true).trim()
 
-        // Use the new count in the docker build command
         sh "docker build -t ${env.BUILD_IMAGE_NAME}:${TAG_ID} ."
     }
 }
-
-
