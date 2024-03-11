@@ -1,23 +1,23 @@
-//@Library("deployScript@main") _
+@Library("deployScript@main") _
 
 pipeline{
     agent any 
 
     environment {
-    doError = '0'
-    CICD_GIT_REPO = "git@uno.brokenenigma.com:raghavendram/cicd-pipeline.git"
-    CICD_GIT_BRANCH = "main"
-    CICD_CREDENTIALS_ID = "ae59053b-c2aa-456b-98b1-52794e33dcd5"
-    APP_GIT_REPO = "git@uno.brokenenigma.com:raghavendram/unocoin-frontend-upgraded.git"
-    APP_GIT_BRANCH = "main"
-    APP_CREDENTIALS_ID = "ae59053b-c2aa-456b-98b1-52794e33dcd5"
-    BUILD_IMAGE_NAME = "frontend-landing-app"
-    REPO_URL = "058264316945.dkr.ecr.ap-south-1.amazonaws.com/frontend-landing-app"
-    REPO_LOGIN = "058264316945.dkr.ecr.ap-south-1.amazonaws.com"
-    DEPLOYMENT_NAME = "fe-landing"
-    REGION = "ap-south-1"
-    NAMESPACE = "frontend"
-    CONTAINER_NAME = "frontend-landing-app"
+
+    CICD_GIT_REPO=sh(returnStdout: true, script: 'aws secretsmanager get-secret-value --secret-id "${JOB_NAME}" | jq --raw-output .SecretString | jq -r ."CICD_GIT_REPO"').trim()
+    CICD_GIT_BRANCH=sh(returnStdout: true, script: 'aws secretsmanager get-secret-value --secret-id "${JOB_NAME}" | jq --raw-output .SecretString | jq -r ."CICD_GIT_BRANCH"').trim()
+    CICD_CREDENTIALS_ID=sh(returnStdout: true, script: 'aws secretsmanager get-secret-value --secret-id "${JOB_NAME}" | jq --raw-output .SecretString | jq -r ."CICD_CREDENTIALS_ID"').trim()
+    APP_GIT_REPO=sh(returnStdout: true, script: 'aws secretsmanager get-secret-value --secret-id "${JOB_NAME}" | jq --raw-output .SecretString | jq -r ."APP_GIT_REPO"').trim()
+    APP_GIT_BRANCH=sh(returnStdout: true, script: 'aws secretsmanager get-secret-value --secret-id "${JOB_NAME}" | jq --raw-output .SecretString | jq -r ."APP_GIT_BRANCH"').trim()
+    APP_CREDENTIALS_ID=sh(returnStdout: true, script: 'aws secretsmanager get-secret-value --secret-id "${JOB_NAME}" | jq --raw-output .SecretString | jq -r ."APP_CREDENTIALS_ID"').trim()
+    BUILD_IMAGE_NAME=sh(returnStdout: true, script: 'aws secretsmanager get-secret-value --secret-id "${JOB_NAME}" | jq --raw-output .SecretString | jq -r ."BUILD_IMAGE_NAME"').trim()
+    REPO_URL=sh(returnStdout: true, script: 'aws secretsmanager get-secret-value --secret-id "${JOB_NAME}" | jq --raw-output .SecretString | jq -r ."REPO_URL"').trim()
+    REPO_LOGIN=sh(returnStdout: true, script: 'aws secretsmanager get-secret-value --secret-id "${JOB_NAME}" | jq --raw-output .SecretString | jq -r ."REPO_LOGIN"').trim()
+    DEPLOYMENT_NAME=sh(returnStdout: true, script: 'aws secretsmanager get-secret-value --secret-id "${JOB_NAME}" | jq --raw-output .SecretString | jq -r ."DEPLOYMENT_NAME"').trim()
+    REGION=sh(returnStdout: true, script: 'aws secretsmanager get-secret-value --secret-id "${JOB_NAME}" | jq --raw-output .SecretString | jq -r ."REGION"').trim()
+    NAMESPACE=sh(returnStdout: true, script: 'aws secretsmanager get-secret-value --secret-id "${JOB_NAME}" | jq --raw-output .SecretString | jq -r ."NAMESPACE"').trim()
+    CONTAINER_NAME=sh(returnStdout: true, script: 'aws secretsmanager get-secret-value --secret-id "${JOB_NAME}" | jq --raw-output .SecretString | jq -r ."CONTAINER_NAME"').trim()
     }
 
     stages {
@@ -45,7 +45,7 @@ pipeline{
         stage("Build Image") {
             steps {
                 echo "Building the latest image..."
-                buildImage("${env.BUILD_IMAGE_NAME}")
+                buildImage("${env.BUILD_IMAGE_NAME}", "${env.DEPLOYMENT_NAME}", "${env.NAMESPACE}")
             }
         }
 
@@ -53,7 +53,7 @@ pipeline{
         steps {
             echo "Login into ECR Repo..."
             
-            pushImage("${env.REGION}", "${env.REPO_LOGIN}", "${env.REPO_URL}", "${env.BUILD_IMAGE_NAME}")
+            pushImage("${env.REGION}", "${env.REPO_LOGIN}", "${env.REPO_URL}", "${env.BUILD_IMAGE_NAME}", "${env.DEPLOYMENT_NAME}", "${env.NAMESPACE}")
             echo "Pushed the image to ECR"
             }
         }
@@ -92,4 +92,3 @@ pipeline{
         
     }
 }
-
