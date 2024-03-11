@@ -18,6 +18,9 @@ pipeline{
     REGION=sh(returnStdout: true, script: 'aws secretsmanager get-secret-value --secret-id "${JOB_NAME}" | jq --raw-output .SecretString | jq -r ."REGION"').trim()
     NAMESPACE=sh(returnStdout: true, script: 'aws secretsmanager get-secret-value --secret-id "${JOB_NAME}" | jq --raw-output .SecretString | jq -r ."NAMESPACE"').trim()
     CONTAINER_NAME=sh(returnStdout: true, script: 'aws secretsmanager get-secret-value --secret-id "${JOB_NAME}" | jq --raw-output .SecretString | jq -r ."CONTAINER_NAME"').trim()
+    FROM_EMAIL=sh(returnStdout: true, script: 'aws secretsmanager get-secret-value --secret-id "${JOB_NAME}" | jq --raw-output .SecretString | jq -r ."FROM_EMAIL"').trim()
+    TO_EMAIL=sh(returnStdout: true, script: 'aws secretsmanager get-secret-value --secret-id "${JOB_NAME}" | jq --raw-output .SecretString | jq -r ."TO_EMAIL"').trim()
+
     }
 
     stages {
@@ -73,6 +76,14 @@ pipeline{
                 echo "Image cleanup completed"
             }
         }
+
+        stage("Success Notification"){
+        steps{
+            script{
+                notificationEmail("${env.FROM_EMAIL}", "${env.TO_EMAIL}", "${env.REGION}", "${STAGE_NAME}", "${JOB_BASE_NAME}", "success")
+            }
+        }
+    }
 
     }
 
