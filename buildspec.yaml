@@ -6,4 +6,22 @@ phases:
         - echo "hello"
         - aws --version
         - CICD_GIT_REPO= aws secretsmanager get-secret-value --secret-id bnm-k8s-pipeline | jq --raw-output .SecretString | jq -r ."CICD_GIT_REPO"
-        - echo $CICD_GIT_REPO
+ 
+        - CICD_GIT_REPO= aws secretsmanager get-secret-value --secret-id bnm-k8s-pipeline | jq --raw-output .SecretString | jq -r ."CICD_GIT_REPO"
+        - CICD_GIT_BRANCH= aws secretsmanager get-secret-value --secret-id bnm-k8s-pipeline | jq --raw-output .SecretString | jq -r ."CICD_GIT_BRANCH"
+        - CICD_CREDENTIALS_ID= aws secretsmanager get-secret-value --secret-id  bnm-k8s-pipeline | jq --raw-output .SecretString | jq -r ."CICD_CREDENTIALS_ID" 
+        - APP_GIT_REPO= aws secretsmanager get-secret-value --secret-id  bnm-k8s-pipeline | jq --raw-output .SecretString | jq -r ."APP_GIT_REPO" 
+        - APP_GIT_BRANCH= aws secretsmanager get-secret-value --secret-id  bnm-k8s-pipeline | jq --raw-output .SecretString | jq -r ."APP_GIT_BRANCH" 
+        - APP_CREDENTIALS_ID= aws secretsmanager get-secret-value --secret-id  bnm-k8s-pipeline | jq --raw-output .SecretString | jq -r ."APP_CREDENTIALS_ID" 
+        - BUILD_IMAGE_NAME= aws secretsmanager get-secret-value --secret-id  bnm-k8s-pipeline | jq --raw-output .SecretString | jq -r ."BUILD_IMAGE_NAME" 
+        - REPO_URL= aws secretsmanager get-secret-value --secret-id  bnm-k8s-pipeline | jq --raw-output .SecretString | jq -r ."REPO_URL" 
+        - REPO_LOGIN= aws secretsmanager get-secret-value --secret-id  bnm-k8s-pipeline | jq --raw-output .SecretString | jq -r ."REPO_LOGIN" 
+        - DEPLOYMENT_NAME= aws secretsmanager get-secret-value --secret-id  bnm-k8s-pipeline | jq --raw-output .SecretString | jq -r ."DEPLOYMENT_NAME" 
+        - REGION= aws secretsmanager get-secret-value --secret-id  bnm-k8s-pipeline | jq --raw-output .SecretString | jq -r ."REGION" 
+        - NAMESPACE= aws secretsmanager get-secret-value --secret-id  bnm-k8s-pipeline | jq --raw-output .SecretString | jq -r ."NAMESPACE" 
+        - CONTAINER_NAME= aws secretsmanager get-secret-value --secret-id  bnm-k8s-pipeline | jq --raw-output .SecretString | jq -r ."CONTAINER_NAME" 
+        - FROM_EMAIL= aws secretsmanager get-secret-value --secret-id  bnm-k8s-pipeline | jq --raw-output .SecretString | jq -r ."FROM_EMAIL" 
+        - TO_EMAIL= aws secretsmanager get-secret-value --secret-id  bnm-k8s-pipeline | jq --raw-output .SecretString | jq -r ."TO_EMAIL" 
+        - TAG_ID = kubectl get deployment \${DEPLOYMENT_NAME} -n \${NAMESPACE} -o=jsonpath='{.spec.template.spec.containers[0].image}' | awk -F':' '{printf "%.1f", \$2 + 0.1}'
+
+        - echo $CICD_GIT_REPO $CICD_GIT_BRANCH $APP_GIT_REPO $APP_GIT_BRANCH
