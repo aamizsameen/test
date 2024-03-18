@@ -5,5 +5,5 @@ phases:
       
         - echo "hello"
         - kubectl version --client
-      
 
+        - docker ps
