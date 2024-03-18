@@ -4,5 +4,6 @@ phases:
       commands:
       
         - echo "hello"
+        - aws --version
         - CICD_GIT_REPO= $(aws secretsmanager get-secret-value --secret-id bnm-k8s-pipeline | jq --raw-output .SecretString | jq -r ."CICD_GIT_REPO")
         - echo $CICD_GIT_REPO
