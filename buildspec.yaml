@@ -4,5 +4,6 @@ phases:
       commands:
       
         - echo "hello"
+        - docker pull nginx
       
 
