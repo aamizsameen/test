@@ -4,7 +4,6 @@ phases:
       commands:
       
         - echo "hello"
-        - docker images
-        - df -h
+        - top
       
 
