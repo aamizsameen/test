@@ -5,23 +5,17 @@ phases:
       
         - echo "hello"
         - aws --version
-        - CICD_GIT_REPO= aws secretsmanager get-secret-value --secret-id ${SECRETS} | jq --raw-output .SecretString | jq -r ."CICD_GIT_REPO"
- 
-        - CICD_GIT_REPO= aws secretsmanager get-secret-value --secret-id ${SECRETS} | jq --raw-output .SecretString | jq -r ."CICD_GIT_REPO"
-        - CICD_GIT_BRANCH= aws secretsmanager get-secret-value --secret-id ${SECRETS} | jq --raw-output .SecretString | jq -r ."CICD_GIT_BRANCH"
-        - CICD_CREDENTIALS_ID= aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."CICD_CREDENTIALS_ID" 
-        - APP_GIT_REPO= aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."APP_GIT_REPO" 
-        - APP_GIT_BRANCH= aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."APP_GIT_BRANCH" 
-        - APP_CREDENTIALS_ID= aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."APP_CREDENTIALS_ID" 
-        - BUILD_IMAGE_NAME= aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."BUILD_IMAGE_NAME" 
-        - REPO_URL= aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."REPO_URL" 
-        - REPO_LOGIN= aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."REPO_LOGIN" 
-        - DEPLOYMENT_NAME= aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."DEPLOYMENT_NAME" 
-        - REGION= aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."REGION" 
-        - NAMESPACE= aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."NAMESPACE" 
-        - CONTAINER_NAME= aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."CONTAINER_NAME" 
-        - FROM_EMAIL= aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."FROM_EMAIL" 
-        - TO_EMAIL= aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."TO_EMAIL" 
+
+        - BUILD_IMAGE_NAME=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."BUILD_IMAGE_NAME")
+        - REPO_URL=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."REPO_URL")
+        - REPO_LOGIN=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."REPO_LOGIN") 
+        - DEPLOYMENT_NAME=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."DEPLOYMENT_NAME")
+        - REGION=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."REGION")
+        - NAMESPACE=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."NAMESPACE")
+        - CONTAINER_NAME=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."CONTAINER_NAME")
+        - FROM_EMAIL=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."FROM_EMAIL")
+        - TO_EMAIL=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."TO_EMAIL")
         - echo $REGION and $REPO_LOGIN
         - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REPO_LOGIN
 
+        
