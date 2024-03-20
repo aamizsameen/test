@@ -37,4 +37,12 @@ phases:
         - export AWS_SESSION_TOKEN="IQoJb3JpZ2luX2VjEPn//////////wEaCXVzLWVhc3QtMSJGMEQCIBQgmANIC8qyKcjtKgfsRx+VDZ1LRfGXhheCU5ZxXCgzAiBOr5bEggU4ZcsG1Zz95VIxY/qNMiaAUo4B8pHPa4+4RCqFAwgSEAEaDDMxNzE4NTYxOTA0NiIMA7axpcA3qah6ly94KuIC68xsyDDcZEuL5RaxGVzmRnXz2vHuoeo0UYHA9zXNf23ZMXaqfivQTxis4NCIxSNAQg0llQg6elz1pLr4A/9b5plBrry8pL4EtFGXk/2jTvYkD4Nnsuf7we6Y3WgkTdfmNdVDhgCTT0IfpeR7zVLVnz/K3rMsV0TW5xaHK8BUw36e1m2r4MOFbcOUlQfsDicts9T1d2sOZUcLmXWpn5P2cAgKgmc3b6N/v0Xxf6FSX1GtvHlRdQhHeVnZ2fbRfryXIMW+OWzCdRhU1pHHqBBSrIKYxWlCCXa8yEk0ngzyHBijgFBSqEefF56EGrGNvrzlTkK9CMbJyBhhgBoVxkOdYNfygNBp0p+uIG1sAvgX1QmNMiLjhg5BwDDXS69JtEqlYKtIw/gQNGmcyM3r67GwTq2En5X3Om0yNv9p5GwfcHJMqYLK1EAvgmwr3ZvrnMt/ke+/hqeIX0eCP1+Hw5GK5ggCMLbG6q8GOqcB+oOA93kg6MWDoJbrlBWXXWroDObgLZ3czTiIFT9e81d3fZpu/Z9iIxBEvZPkLHm9FqWmACVKfB40YylqAwjzcdArezkJXoenkwE5lAE80ZLgLfulDbtcJfnwyOi3Je/cOrcTMLZx4/LEkjsxdXDLR8mTGWDg9Kz0O3wijKJiI/bzgO60/2ULK48AGWO2/xokuYJd42eNT7y3ZDQ2ad3T+QHL3bKfX94="
         - aws eks update-kubeconfig --name POC-amz
         - kubectl get po
+        - TAG_ID = kubectl get deployment \${DEPLOYMENT_NAME} -n \${NAMESPACE} -o=jsonpath='{.spec.template.spec.containers[0].image}' | awk -F':' '{printf "%.1f", \$2 + 0.1}'
+        - echo $TAG_ID
+
+        # Apply changes to our Application using kubectl
+        - echo "Apply changes to kube manifests"            
+        - kubectl set image deployment/${DEPLOYMENT_NAME} ${CONTAINER_NAME}=${REPO_URL}:latest -n ${NAMESPACE}
+        - kubectl rollout restart deployment/${DEPLOYMENT_NAME} -n ${NAMESPACE}
+        - echo "Completed applying changes to Kubernetes Objects"  
 
