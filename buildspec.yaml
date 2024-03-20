@@ -31,6 +31,10 @@ phases:
         - docker push ${REPO_URL}:latest
 
         # Setup kubectl with our EKS Cluster              
-        - echo "Update Kube Config"      
+        - echo "Update Kube Config" 
+        - export AWS_ACCESS_KEY_ID="$(echo ${CREDENTIALS} | jq -r '.Credentials.AccessKeyId')"
+        - export AWS_SECRET_ACCESS_KEY="$(echo ${CREDENTIALS} | jq -r '.Credentials.SecretAccessKey')"
+        - export AWS_SESSION_TOKEN="$(echo ${CREDENTIALS} | jq -r '.Credentials.SessionToken')"
         - aws eks update-kubeconfig --name POC-amz
         - kubectl get po
+
