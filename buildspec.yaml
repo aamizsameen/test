@@ -22,5 +22,6 @@ phases:
         - CONTAINER_NAME= aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."CONTAINER_NAME" 
         - FROM_EMAIL= aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."FROM_EMAIL" 
         - TO_EMAIL= aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."TO_EMAIL" 
+        - echo $REGION and $REPO_LOGIN
         - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REPO_LOGIN
 
