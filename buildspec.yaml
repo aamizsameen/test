@@ -23,6 +23,7 @@ phases:
         # - docker build -t ${BUILD_IMAGE_NAME}:latest .
         - aws eks update-kubeconfig --region us-east-2 --name test
         - kubectl get po
+        - whoami
   post_build:
       commands:
         # # Push Docker Image to ECR Repository
