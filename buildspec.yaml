@@ -4,7 +4,7 @@ phases:
       commands:
       
         - echo "retrieving the secrets value from Secrets Manager."
-
+        - apt install bc -y
         - BUILD_IMAGE_NAME=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."BUILD_IMAGE_NAME")
         - REPO_URL=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."REPO_URL")
         - REPO_LOGIN=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."REPO_LOGIN") 
