@@ -13,7 +13,7 @@ phases:
         - NAMESPACE=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."NAMESPACE")
         - CONTAINER_NAME=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."CONTAINER_NAME")
         - CLUSTER_NAME=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."CLUSTER_NAME")
-        - apt -y update && apt install -y
+        - uname -a
         # - FROM_EMAIL=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."FROM_EMAIL")
         # - TO_EMAIL=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."TO_EMAIL")
 
