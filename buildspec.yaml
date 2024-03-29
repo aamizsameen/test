@@ -13,6 +13,8 @@ phases:
         - NAMESPACE=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."NAMESPACE")
         - CONTAINER_NAME=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."CONTAINER_NAME")
         - CLUSTER_NAME=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."CLUSTER_NAME")
+        # - FROM_EMAIL=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."FROM_EMAIL")
+        # - TO_EMAIL=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."TO_EMAIL")
 
   build:
       commands:
@@ -27,20 +29,20 @@ phases:
         - echo "Update Kube Config" 
         - aws eks update-kubeconfig --name ${CLUSTER_NAME}
         - kubectl get po
-        - TAG_ID=$(kubectl get deployment ${DEPLOYMENT_NAME} -n ${NAMESPACE} -o=jsonpath='{.spec.template.spec.containers[0].image}' | awk -F':' '{printf "%.1f", $2 + 0.01}')
-        - kubectl get deployment ${DEPLOYMENT_NAME} -n ${NAMESPACE} -o=jsonpath='{.spec.template.spec.containers[0].image}' | awk -F':' '{printf "%.1f", $2 + 0.01}'
+        # - TAG_ID=$(kubectl get deployment ${DEPLOYMENT_NAME} -n ${NAMESPACE} -o=jsonpath='{.spec.template.spec.containers[0].image}' | awk -F':' '{printf "%.1f", $2 + 0.01}')
+        - bash script.sh
         # Push Docker Image to ECR Repository
         - echo "Pushing the Docker image to ECR Repository"
         - aws ecr get-login-password --region ${REGION} | docker login --username AWS --password-stdin ${REPO_LOGIN}
         - docker tag ${BUILD_IMAGE_NAME}:latest ${REPO_URL}:${TAG_ID}
         - docker push ${REPO_URL}:${TAG_ID}
 
-        # Setup kubectl with our EKS Cluster              
-
-
-
         # Apply changes to our Application using kubectl
         - echo "Apply changes to kube manifests"            
         - kubectl set image deployment/${DEPLOYMENT_NAME} ${CONTAINER_NAME}=${REPO_URL}:${TAG_ID} -n ${NAMESPACE}
         - kubectl rollout restart deployment/${DEPLOYMENT_NAME} -n ${NAMESPACE}
         - echo "Completed applying changes to Kubernetes Objects"  
+
+        # # Notifying the deploy state via SES.
+        # - echo "Notifying the EKS deployment state"
+        # - aws ses send-email --from ${FROM_EMAIL} --to ${TO_EMAIL} --html 'The deployment is successful' --subject 'EKS Deployment state' --region ${REGION}
