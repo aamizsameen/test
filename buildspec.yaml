@@ -15,6 +15,7 @@ phases:
         - CLUSTER_NAME=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."CLUSTER_NAME")
         # - FROM_EMAIL=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."FROM_EMAIL")
         # - TO_EMAIL=$(aws secretsmanager get-secret-value --secret-id  ${SECRETS} | jq --raw-output .SecretString | jq -r ."TO_EMAIL")
+        #
 
   build:
       commands:
